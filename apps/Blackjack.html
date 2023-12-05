@@ -1,0 +1,958 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Game</title>
+        <script>
+            function login() {
+                var userUsername = prompt("What is your username?");
+                var userPassword = prompt("What is your password?");
+                //display error message if login in unsuccessful
+                var loggedIn = 0;
+                for (var i = 0; i < usernames.length; i++) {
+                    if (userUsername == usernames[i]) {
+                        if (userPassword == passwords[i]) {
+                            var name = userUsername;
+                            bal = balances[i];
+                            document.getElementById("login").style.display = "none";
+                            document.getElementById("account").style.display = "none";
+                            document.getElementById("heading").innerHTML = "Welcome back " + name + ".";
+                            document.getElementById("dealerTag").innerHTML = "<b>Dealer:</b>";
+                            document.getElementById("balance").innerHTML = "<b>Balance:</b>$" + bal;
+                            document.getElementById("betAmount").innerHTML = "Bet:$" + bet;
+                            document.getElementById("playerTag").innerHTML = "<b>Player:</b>";
+                            document.getElementById("playerTotalTag").innerHTML = "<i>Total: </i>";
+                            document.getElementById("dealerTotalTag").innerHTML = "<i>Total: </i>";
+                            document.getElementById("bet").style.display = "block";
+                            document.getElementById("plusOne").style.display = "inline";
+                            document.getElementById("plusTen").style.display = "inline";
+                            document.getElementById("plusHundred").style.display = "inline";
+                            document.getElementById("plusThousand").style.display = "inline";
+                            document.getElementById("minusOne").style.display = "inline";
+                            document.getElementById("minusTen").style.display = "inline";
+                            document.getElementById("minusHundred").style.display = "inline";
+                            document.getElementById("minusThousand").style.display = "inline";
+                            loggedIn = 1;
+                        }
+                    }
+                }
+                if (loggedIn == 0) {
+                    alert("Wrong username or password!");
+                }
+            }
+            function newAccount() {
+                //detects if username is already taken
+                var freeUsername = 0;
+                //checks if the confirm password is correct
+                var correctPassword = 1;
+                var newUsername = prompt("Enter a username");
+                for (var o = 0; o < usernames.length; o++) {
+                    if (newUsername == usernames[o]) {
+                        alert("The username is already taken!");
+                        freeUsername = 1;
+                    }
+                }
+                if (freeUsername == 0) {
+                    var newPassword = prompt("Enter a password");
+                    var confirmPassword = prompt("Enter your password again");
+                    if (confirmPassword != newPassword) {
+                        alert("Your enetered password is incorrect!");
+                        correctPassword = 0;
+                    }
+                    if (correctPassword == 1) {
+                        alert("You can now login with your account.");
+                        usernames.push(newUsername);
+                        passwords.push(newPassword);
+                        balances.push(10);
+                    }
+                }
+            }
+            function startGame() { //starts the game, resets all values
+                if (bal >= bet) {
+                playerTotal = 0;
+                playerAce = 0;
+                playerFinal = 0;
+                dealerTotal = 0;
+                dealerAce = 0;
+                dealerFinal = 0;
+                splitTotal = 0;
+                splitAce = 0;
+                splitFinal = 0;
+                statementRan = 0;
+                timer = 0;
+                dealerDrawCounter = 0;
+                playerHasAce = false;
+                dealerHasAce = false;
+                splitHasAce = false;
+                playerSplit = false;
+                gameEnded = false;
+                splitBust = false;
+                playerBust = false;
+                playerAltTotal = false;
+                dealerAltTotal = false;
+                splitAltTotal = false;
+                statementRan2 = false;
+                for (var x = 0; x < 13; x++) {
+                    cards[x][1] = 0;
+                    if (x < 11) {
+                        receivedCards[x][0] = 0;
+                        receivedCards[x][1] = 0;
+                        receivedCards[x][2] = 0;
+                    }
+                }
+                document.getElementById("dealerCard1").innerHTML = ""; //reset of everything
+                document.getElementById("dealerCard2").innerHTML = "";
+                document.getElementById("dealerCard3").innerHTML = "";
+                document.getElementById("dealerCard4").innerHTML = "";
+                document.getElementById("dealerCard5").innerHTML = "";
+                document.getElementById("dealerCard6").innerHTML = "";
+                document.getElementById("dealerCard7").innerHTML = "";
+                document.getElementById("dealerCard8").innerHTML = "";
+                document.getElementById("dealerCard9").innerHTML = "";
+                document.getElementById("dealerCard10").innerHTML = "";
+                document.getElementById("dealerTotal").innerHTML = "";
+                document.getElementById("dealerAceTotal").innerHTML = "";
+                document.getElementById("dealerResult").innerHTML = "";
+                document.getElementById("dealerSplitResult").innerHTML = "";
+                document.getElementById("playerCard1").innerHTML = "";
+                document.getElementById("playerCard2").innerHTML = "";
+                document.getElementById("playerCard3").innerHTML = "";
+                document.getElementById("playerCard4").innerHTML = "";
+                document.getElementById("playerCard5").innerHTML = "";
+                document.getElementById("playerCard6").innerHTML = "";
+                document.getElementById("playerCard7").innerHTML = "";
+                document.getElementById("playerCard8").innerHTML = "";
+                document.getElementById("playerCard9").innerHTML = "";
+                document.getElementById("playerCard10").innerHTML = "";
+                document.getElementById("playerCard11").innerHTML = "";
+                document.getElementById("playerTotal").innerHTML = "";
+                document.getElementById("playerAceTotal").innerHTML = "";
+                document.getElementById("playerResult").innerHTML = "";
+                document.getElementById("splitCard1").innerHTML = "";
+                document.getElementById("splitCard2").innerHTML = "";
+                document.getElementById("splitCard3").innerHTML = "";
+                document.getElementById("splitCard4").innerHTML = "";
+                document.getElementById("splitCard5").innerHTML = "";
+                document.getElementById("splitCard6").innerHTML = "";
+                document.getElementById("splitCard7").innerHTML = "";
+                document.getElementById("splitCard8").innerHTML = "";
+                document.getElementById("splitCard9").innerHTML = "";
+                document.getElementById("splitCard10").innerHTML = "";
+                document.getElementById("splitCard11").innerHTML = "";
+                document.getElementById("splitTag").innerHTML = "";
+                document.getElementById("splitTotal").innerHTML = "";
+                document.getElementById("splitAceTotal").innerHTML = "";
+                document.getElementById("splitTotalTag").innerHTML = "";
+                document.getElementById("splitResult").innerHTML = "";
+                document.getElementById("plusOne").style.display = "none";
+                document.getElementById("plusTen").style.display = "none";
+                document.getElementById("plusHundred").style.display = "none";
+                document.getElementById("plusThousand").style.display = "none";
+                document.getElementById("minusOne").style.display = "none";
+                document.getElementById("minusTen").style.display = "none";
+                document.getElementById("minusHundred").style.display = "none";
+                document.getElementById("minusThousand").style.display = "none";
+                receivedCards[0][0] = drawCard();
+                hiddenDealerCard = receivedCards[0][0];
+                setTimeout(function () {
+                    document.getElementById("dealerCard1").innerHTML = " Hidden &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                }, 500);
+                receivedCards[1][0] = drawCard();
+                setTimeout(function () {
+                    document.getElementById("dealerCard2").innerHTML = receivedCards[1][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                }, 1000);
+                receivedCards[0][1] = drawCard();
+                setTimeout(function () {
+                    document.getElementById("playerCard1").innerHTML = receivedCards[0][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                }, 1500);
+                receivedCards[1][1] = drawCard();
+                secondPlayerCard = receivedCards[1][1];
+                setTimeout(function () {
+                    document.getElementById("playerCard2").innerHTML = receivedCards[1][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                }, 2000);
+                document.getElementById("bet").style.display = "none";
+                setTimeout(total, 1000, 0, true);
+                setTimeout(total, 2000, 1, true);
+                setTimeout(function () {
+                    hitCounter = -1;
+                }, 2100);
+                setTimeout(function () {
+                    document.getElementById("hit").style.display = "inline";
+                    document.getElementById("stand").style.display = "inline";
+                    if (receivedCards[0][1] == receivedCards [1][1] || receivedCards[0][1] == 11 && receivedCards[1][1] == 1) {
+                        document.getElementById("split").style.display = "inline";
+                    }
+                }, 2000);
+                 } else {
+                   alert("You do not have sufficient funds!");
+                }
+            }
+            function hit(x) { //draws a card when the hit button is pressed
+                if (x == 0 || playerSplit == false) {
+                    hitCounter++;
+                    switch (hitCounter) {
+                        case 0:
+                            receivedCards[2][1] = drawCard();
+                            document.getElementById("playerCard3").innerHTML = receivedCards[2][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 1:
+                            receivedCards[3][1] = drawCard();
+                            document.getElementById("playerCard4").innerHTML = receivedCards[3][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 2:
+                            receivedCards[4][1] = drawCard();
+                            document.getElementById("playerCard5").innerHTML = receivedCards[4][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 3:
+                            receivedCards[5][1] = drawCard();
+                            document.getElementById("playerCard6").innerHTML = receivedCards[5][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 4:
+                            receivedCards[6][1] = drawCard();
+                            document.getElementById("playerCard7").innerHTML = receivedCards[6][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 5:
+                            receivedCards[7][1] = drawCard();
+                            document.getElementById("playerCard8").innerHTML = receivedCards[7][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 6:
+                            receivedCards[8][1] = drawCard();
+                            document.getElementById("playerCard9").innerHTML = receivedCards[8][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 7:
+                            receivedCards[9][1] = drawCard();
+                            document.getElementById("playerCard10").innerHTML = receivedCards[9][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 8:
+                            receivedCards[10][1] = drawCard();
+                            document.getElementById("playerCard11").innerHTML = receivedCards[10][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                    }
+                    total(1, false);
+                } else {
+                    hitCounter++;
+                    switch (hitCounter) {
+                        case 0:
+                            receivedCards[2][2] = drawCard();
+                            document.getElementById("splitCard3").innerHTML = receivedCards[2][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 1:
+                            receivedCards[3][2] = drawCard();
+                            document.getElementById("splitCard4").innerHTML = receivedCards[3][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 2:
+                            receivedCards[4][2] = drawCard();
+                            document.getElementById("splitCard5").innerHTML = receivedCards[4][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 3:
+                            receivedCards[5][2] = drawCard();
+                            document.getElementById("splitCard6").innerHTML = receivedCards[5][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 4:
+                            receivedCards[6][2] = drawCard();
+                            document.getElementById("splitCard7").innerHTML = receivedCards[6][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 5:
+                            receivedCards[7][2] = drawCard();
+                            document.getElementById("splitCard8").innerHTML = receivedCards[7][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 6:
+                            receivedCards[8][2] = drawCard();
+                            document.getElementById("splitCard9").innerHTML = receivedCards[8][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 7:
+                            receivedCards[9][2] = drawCard();
+                            document.getElementById("splitCard10").innerHTML = receivedCards[9][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                        case 8:
+                            receivedCards[10][2] = drawCard();
+                            document.getElementById("splitCard11").innerHTML = receivedCards[10][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            break;
+                    }
+                    total(2, false);
+                }
+            }
+            function total(y, z) { //translates string values into numbers, as well as calculating and displaying the total
+                // y defines if its the dealer's card (0) or player's card (1), z calculates the total of all the cards when true
+                document.getElementById("split").style.display = "none";
+                if (z == true) {
+                    hitCounter = -2;
+                }
+                for (var x = hitCounter + 2; x < 11; x++) {
+                    for (var i = 0; i < 2; i++) {
+                        switch (true) {
+                            case (receivedCards[x][y] == "A" || receivedCards[x][y] == "1" || receivedCards[x][y] == "11"):
+                                if (i == 0) {
+                                    receivedCards[x][y] = 1;
+                                } else {
+                                    receivedCards[x][y] = 11;
+                                }
+                                break;
+                            case (receivedCards[x][y] == "2"):
+                                receivedCards[x][y] = 2;
+                                break;
+                            case (receivedCards[x][y] == "3"):
+                                receivedCards[x][y] = 3;
+                                break;
+                            case (receivedCards[x][y] == "4"):
+                                receivedCards[x][y] = 4;
+                                break;
+                            case (receivedCards[x][y] == "5"):
+                                receivedCards[x][y] = 5;
+                                break;
+                            case (receivedCards[x][y] == "6"):
+                                receivedCards[x][y] = 6;
+                                break;
+                            case (receivedCards[x][y] == "7"):
+                                receivedCards[x][y] = 7;
+                                break;
+                            case (receivedCards[x][y] == "8"):
+                                receivedCards[x][y] = 8;
+                                break;
+                            case (receivedCards[x][y] == "9"):
+                                receivedCards[x][y] = 9;
+                                break;
+                            case (receivedCards[x][y] == "10" || receivedCards[x][y] == "J" || receivedCards[x][y] == "Q" || receivedCards[x][y] == "K"):
+                                receivedCards[x][y] = 10;
+                                break;
+                            default:
+                                receivedCards[x][y] = 0;
+                                break;
+                        }
+                        if (y == 0) { //dealer
+                            if (i == 0) {
+                                dealerTotal += receivedCards[x][0];
+                                if (gameEnded == false && statementRan == 0) {
+                                    dealerTotal = dealerTotal - receivedCards[0][0];
+                                    statementRan++;
+                                }
+                                document.getElementById("dealerTotal").innerHTML = dealerTotal;
+                            } else {
+                                if (receivedCards[x][0] == 11 && dealerHasAce == true) {
+                                    receivedCards[x][0] = 1;
+                                }
+                                if (receivedCards[x][0] == 11) {
+                                    dealerHasAce = true;
+                                }
+                                dealerAce += receivedCards[x][0];
+                                if (gameEnded == false && statementRan == 1) {
+                                    dealerAce = dealerAce - receivedCards[0][0];
+                                    statementRan++;
+                                    dealerHasAce = false;
+                                }
+                                if (receivedCards[x][0] == 11 || dealerAltTotal == true) {
+                                    if (dealerAce > 21 || receivedCards [0][0] == 11 && gameEnded == false) {
+                                        dealerAltTotal = false;
+                                    } else {
+                                        document.getElementById("dealerAceTotal").innerHTML = "/ " + dealerAce;
+                                        dealerAltTotal = true;
+                                    }
+                                } else {
+                                    document.getElementById("dealerAceTotal").innerHTML = "";
+                                }
+                                if (receivedCards[0][0] == 11 && dealerAce == 11 && gameEnded == false) {
+                                    document.getElementById("dealerAceTotal").innerHTML = " / 11";
+                                }
+                            }
+                        } else if (y == 1) { //player
+                            if (i == 0) {
+                                playerTotal += receivedCards[x][1];
+                                document.getElementById("playerTotal").innerHTML = playerTotal;
+                            } else {
+                                if (receivedCards[x][1] == 11 && playerHasAce == true) {
+                                    receivedCards[x][1] = 1;
+                                }
+                                if (receivedCards[x][1] == 11) {
+                                    playerHasAce = true;
+                                }
+                                playerAce += receivedCards[x][1];
+                                if (receivedCards[x][1] == 11 || playerAltTotal == true) {
+                                    if (playerAce > 21) {
+                                        playerAltTotal = false;
+                                    } else {
+                                        document.getElementById("playerAceTotal").innerHTML = "/ " + playerAce;
+                                        playerAltTotal = true;
+                                    }
+                                } else {
+                                    document.getElementById("playerAceTotal").innerHTML = "";
+                                }
+                            }
+                        } else { //split
+                            if (i == 0) {
+                                splitTotal += receivedCards[x][2];
+                                document.getElementById("splitTotal").innerHTML = splitTotal;
+                            } else {
+                                if (receivedCards[x][2] == 11 && splitHasAce == true) {
+                                    receivedCards[x][2] = 1;
+                                }
+                                if (receivedCards[x][2] == 11) {
+                                    splitHasAce = true;
+                                }
+                                splitAce += receivedCards[x][2];
+                                if (receivedCards[x][2] == 11 || splitAltTotal == true) {
+                                    if (splitAce > 21) {
+                                        splitAltTotal = false;
+                                    } else {
+                                        document.getElementById("splitAceTotal").innerHTML = "/ " + splitAce;
+                                        splitAltTotal = true;
+                                    }
+                                } else {
+                                    document.getElementById("splitAceTotal").innerHTML = "";
+                                }
+                            }
+                        }
+                    }
+                }
+                if (gameEnded == false) {
+                    endGame(false);
+                }
+            }
+            function drawCard() { //draws a card from A to K
+                for (; ; ) {
+                    var cardNo = Math.floor(Math.random() * 52);
+                    cardNo = parseInt(cardNo / 4);
+                    if (cards[cardNo][1] < 4) {
+                        cards[cardNo][1]++;
+                        return cards[cardNo][0];
+                        break;
+                    }
+                }
+            }
+            function endGame(x) { //checks if the player gets 21/busted/stands
+                if (statementRan2 == false) {
+                    if (playerTotal == 21 || playerAce == 21) {
+                        if (playerSplit == false) {
+                            dealerDraw("stand");
+                            setTimeout(function () {
+                                document.getElementById("hit").style.display = "none";
+                                document.getElementById("stand").style.display = "none";
+                            }, 0);
+                        } else {
+                            document.getElementById("hitSplit").style.display = "none";
+                            document.getElementById("standSplit").style.display = "none";
+                            document.getElementById("hit").style.display = "inline";
+                            document.getElementById("stand").style.display = "inline";
+                            document.getElementById("playerResult").innerHTML = "<b>Blackjack!</b>";
+                            document.getElementById("playerTotal").innerHTML = "21";
+                            document.getElementById("playerAceTotal").innerHTML = "";
+                            hitCounter = -1;
+                            receivedCards[1][2] = drawCard();
+                            document.getElementById("splitCard2").innerHTML = receivedCards[1][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            statementRan2 = true;
+                            total(2, false);
+                        }
+                    }
+                    if (playerTotal > 21) {
+                        if (playerSplit == false) {
+                            dealerDraw("bust");
+                            document.getElementById("hit").style.display = "none";
+                            document.getElementById("stand").style.display = "none";
+                        } else {
+                            document.getElementById("hitSplit").style.display = "none";
+                            document.getElementById("standSplit").style.display = "none";
+                            document.getElementById("hit").style.display = "inline";
+                            document.getElementById("stand").style.display = "inline";
+                            document.getElementById("playerResult").innerHTML = "<b>Busted!</b>";
+                            hitCounter = -1;
+                            playerBust = true;
+                            receivedCards[1][2] = drawCard();
+                            document.getElementById("splitCard2").innerHTML = receivedCards[1][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            statementRan2 = true;
+                            total(2, false);
+                        }
+                    }
+                    if (x == true) {
+                        if (playerSplit == false) {
+                            dealerDraw("stand");
+                            document.getElementById("hit").style.display = "none";
+                            document.getElementById("stand").style.display = "none";
+                        } else {
+                            document.getElementById("hitSplit").style.display = "none";
+                            document.getElementById("standSplit").style.display = "none";
+                            document.getElementById("hit").style.display = "inline";
+                            document.getElementById("stand").style.display = "inline";
+                            document.getElementById("playerResult").innerHTML = "<b>Stand</b>";
+                            hitCounter = -1;
+                            receivedCards[1][2] = drawCard();
+                            document.getElementById("splitCard2").innerHTML = receivedCards[1][2] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                            statementRan2 = true;
+                            total(2, false);
+                        }
+                    }
+                } else {
+                    if (splitTotal == 21 || splitAce == 21) {
+                        dealerDraw("stand");
+                        setTimeout(function () {
+                            document.getElementById("hit").style.display = "none";
+                            document.getElementById("stand").style.display = "none";
+                        }, 0);
+                    }
+                    if (splitTotal > 21) {
+                        if (playerTotal > 21) {
+                            dealerDraw("bust");
+                        } else {
+                            splitBust = true;
+                            dealerDraw("stand");
+                        }
+                        document.getElementById("hit").style.display = "none";
+                        document.getElementById("stand").style.display = "none";
+                    }
+                    if (x == true) {
+                        dealerDraw("stand");
+                        document.getElementById("hit").style.display = "none";
+                        document.getElementById("stand").style.display = "none";
+                    }
+                }
+            }
+            function dealerDraw(y) {//draws the cards for the dealer, once the game ends
+                gameEnded = true;
+                dealerTotal = 0;
+                dealerAce = 0;
+                if (y == "stand") {
+                    for (var x = 0; x < 9; x++) {
+                        setTimeout(function () {
+                            switch (dealerDrawCounter) {
+                                case 0:
+                                    dealerTotal = 0;
+                                    dealerAce = 0;
+                                    dealerHasAce = false;
+                                    total(0, true);
+                                    document.getElementById("dealerCard1").innerHTML = hiddenDealerCard + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                    hitCounter = -1;
+                                    if (dealerTotal >= 16 && dealerAce >= 18) {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 1:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[2][0] = drawCard();
+                                        document.getElementById("dealerCard3").innerHTML = receivedCards[2][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 2:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[3][0] = drawCard();
+                                        document.getElementById("dealerCard4").innerHTML = receivedCards[3][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 3:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[4][0] = drawCard();
+                                        document.getElementById("dealerCard5").innerHTML = receivedCards[4][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 4:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[5][0] = drawCard();
+                                        document.getElementById("dealerCard6").innerHTML = receivedCards[5][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 5:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[6][0] = drawCard();
+                                        document.getElementById("dealerCard7").innerHTML = receivedCards[6][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 6:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[7][0] = drawCard();
+                                        document.getElementById("dealerCard8").innerHTML = receivedCards[7][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 7:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[8][0] = drawCard();
+                                        document.getElementById("dealerCard9").innerHTML = receivedCards[8][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    break;
+                                case 8:
+                                    if ((dealerTotal < 16 && dealerAce < 18) || (dealerTotal < 16 && dealerAce > 21)) {
+                                        receivedCards[9][0] = drawCard();
+                                        document.getElementById("dealerCard10").innerHTML = receivedCards[9][0] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                                        total(0, false);
+                                    } else {
+                                        results("stand");
+                                    }
+                                    document.getElementById("reset").innerHTML = "";
+                                    document.getElementById("bet").style.display = "block";
+                                    document.getElementById("plusOne").style.display = "inline";
+                                    document.getElementById("plusTen").style.display = "inline";
+                                    document.getElementById("plusHundred").style.display = "inline";
+                                    document.getElementById("plusThousand").style.display = "inline";
+                                    document.getElementById("minusOne").style.display = "inline";
+                                    document.getElementById("minusTen").style.display = "inline";
+                                    document.getElementById("minusHundred").style.display = "inline";
+                                    document.getElementById("minusThousand").style.display = "inline";
+                                    break;
+                            }
+                            hitCounter++;
+                            dealerDrawCounter++;
+                        }, timer++ * 500);
+                    }
+                } else {
+                    dealerTotal = 0;
+                    dealerAce = 0;
+                    dealerHasAce = false;
+                    total(0, true);
+                    document.getElementById("dealerCard1").innerHTML = hiddenDealerCard + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                    results("busted");
+                }
+            }
+            function results(x) {//outputs the results
+                if (dealerAce > dealerTotal && dealerAce <= 21) {
+                    dealerFinal = dealerAce;
+                } else {
+                    dealerFinal = dealerTotal;
+                }
+                if (playerAce > playerTotal && playerAce <= 21) {
+                    playerFinal = playerAce;
+                } else {
+                    playerFinal = playerTotal;
+                }
+                if (splitAce > splitTotal && splitAce <= 21) {
+                    splitFinal = splitAce;
+                } else {
+                    splitFinal = splitTotal;
+                }
+                if (x == "stand") {
+                    if (dealerFinal == dealerAce) {
+                        document.getElementById("dealerTotal").innerHTML = dealerFinal;
+                        document.getElementById("dealerAceTotal").innerHTML = "";
+                    }
+                    if (playerFinal == playerAce) {
+                        document.getElementById("playerTotal").innerHTML = playerFinal;
+                        document.getElementById("playerAceTotal").innerHTML = "";
+                    }
+                    if (splitFinal == splitAce && playerSplit == true) {
+                        document.getElementById("splitTotal").innerHTML = splitFinal;
+                        document.getElementById("splitAceTotal").innerHTML = "";
+                    }
+                    if (dealerFinal > 21) {
+                        document.getElementById("playerResult").innerHTML = "<b>Win!</b>";
+                        document.getElementById("dealerResult").innerHTML = "<b>Busted!</b>";
+                        if (playerSplit == true) {
+                            document.getElementById("splitResult").innerHTML = "<b>Win!</b>";
+                            document.getElementById("dealerSplitResult").innerHTML = "<b> / Busted!</b>";
+                        }
+                        if (dealerDrawCounter == 8) {
+                            bal += bet;
+                            if (playerSplit == true) {
+                                bal += bet;
+                            }
+                            if (splitBust == true) {
+                                bal -= bet;
+                            }
+                            if (playerBust == true) {
+                                bal -= bet;
+                            }
+                        }
+                    }
+                    if (dealerFinal == playerFinal) {
+                        document.getElementById("playerResult").innerHTML = "<b>Push</b>";
+                        document.getElementById("dealerResult").innerHTML = "<b>Push</b>";
+                    }
+                    if (dealerFinal < playerFinal && playerBust == false) {
+                        document.getElementById("playerResult").innerHTML = "<b>Win!</b>";
+                        document.getElementById("dealerResult").innerHTML = "<b>Lose</b>";
+                        if (dealerDrawCounter == 8) {
+                            bal += bet;
+                        }
+                    }
+                    if (dealerFinal > playerFinal && dealerFinal <= 21) {
+                        document.getElementById("playerResult").innerHTML = "<b>Lose</b>";
+                        document.getElementById("dealerResult").innerHTML = "<b>Win!</b>";
+                        if (dealerDrawCounter == 8) {
+                            bal -= bet;
+                        }
+                    }
+                    if (playerBust == true) {
+                        document.getElementById("dealerResult").innerHTML = "<b>Win!</b>";
+                        document.getElementById("playerResult").innerHTML = "<b>Busted!</b>";
+                        if (dealerDrawCounter == 8) {
+                            bal -= bet;
+                        }
+                    }
+                    if (playerSplit == true) {
+                        if (splitBust == true) {
+                            document.getElementById("dealerSplitResult").innerHTML = "<b> / Win!</b>";
+                            document.getElementById("splitResult").innerHTML = "<b>Busted!</b>";
+                            if (dealerDrawCounter == 8) {
+                                bal -= bet;
+                            }
+                        } else {
+                            if (dealerFinal == splitFinal) {
+                                document.getElementById("splitResult").innerHTML = "<b>Push</b>";
+                                document.getElementById("dealerSplitResult").innerHTML = "<b> / Push</b>";
+                            }
+                            if (dealerFinal < splitFinal) {
+                                document.getElementById("splitResult").innerHTML = "<b>Win!</b>";
+                                document.getElementById("dealerSplitResult").innerHTML = "<b> / Lose</b>";
+                                if (dealerDrawCounter == 8) {
+                                    bal += bet;
+                                }
+                            }
+                            if (dealerFinal > splitFinal && dealerFinal <= 21) {
+                                document.getElementById("splitResult").innerHTML = "<b>Lose</b>";
+                                document.getElementById("dealerSplitResult").innerHTML = "<b> / Win!</b>";
+                                if (dealerDrawCounter == 8) {
+                                    bal -= bet;
+                                }
+                            }
+                        }
+                    }
+                    document.getElementById("reset").innerHTML = "Game Resetting...";
+                }
+                if (x == "busted") {
+                    if (dealerFinal == dealerAce) {
+                        document.getElementById("dealerTotal").innerHTML = dealerFinal;
+                        document.getElementById("dealerAceTotal").innerHTML = "";
+                    }
+                    document.getElementById("dealerResult").innerHTML = "<b>Win!</b>";
+                    document.getElementById("playerResult").innerHTML = "<b>Busted!</b>";
+                    bal -= bet;
+                    if (playerSplit == true) {
+                        document.getElementById("splitResult").innerHTML = "<b>Busted!</b>";
+                        document.getElementById("dealerSplitResult").innerHTML = "<b> / Win!</b>";
+                        bal -= bet;
+                    }
+                    document.getElementById("bet").style.display = "block";
+                    document.getElementById("plusOne").style.display = "inline";
+                    document.getElementById("plusTen").style.display = "inline";
+                    document.getElementById("plusHundred").style.display = "inline";
+                    document.getElementById("plusThousand").style.display = "inline";
+                    document.getElementById("minusOne").style.display = "inline";
+                    document.getElementById("minusTen").style.display = "inline";
+                    document.getElementById("minusHundred").style.display = "inline";
+                    document.getElementById("minusThousand").style.display = "inline";
+                }
+                betAmount(0);
+                document.getElementById("balance").innerHTML = "<b>Balance: </b>$" + bal;
+            }
+            function betAmount(x) {//calculates the bet amount
+                bet += x;
+                if (bal - bet <= 0) {
+                    document.getElementById("plusOne").disabled = true;
+                    document.getElementById("plusTen").disabled = true;
+                    document.getElementById("plusHundred").disabled = true;
+                    document.getElementById("plusThousand").disabled = true;
+                    if (bet > bal) {
+                        bet = bal;
+                    }
+                } else {
+                    document.getElementById("plusOne").disabled = false;
+                    document.getElementById("plusTen").disabled = false;
+                    document.getElementById("plusHundred").disabled = false;
+                    document.getElementById("plusThousand").disabled = false;
+                }
+                if (bet <= 1) {
+                    document.getElementById("minusOne").disabled = true;
+                    document.getElementById("minusTen").disabled = true;
+                    document.getElementById("minusHundred").disabled = true;
+                    document.getElementById("minusThousand").disabled = true;
+                    if (bet <= 0) {
+                        bet = 1;
+                    }
+                } else {
+                    document.getElementById("minusOne").disabled = false;
+                    document.getElementById("minusTen").disabled = false;
+                    document.getElementById("minusHundred").disabled = false;
+                    document.getElementById("minusThousand").disabled = false;
+                }
+                document.getElementById("betAmount").innerHTML = "Bet: $" + bet;
+                document.getElementById("balance").innerHTML = "<b>Balance: </b>$" + bal;
+            }
+            function split() {
+                playerSplit = true;
+                document.getElementById("splitTag").innerHTML = "<b>Split:</b>";
+                document.getElementById("splitTotalTag").innerHTML = "<i>Total:</i>";
+                document.getElementById("hit").style.display = "none";
+                document.getElementById("stand").style.display = "none";
+                setTimeout(function () {
+                    document.getElementById("splitCard1").innerHTML = secondPlayerCard + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                    document.getElementById("playerCard2").innerHTML = "";
+                    receivedCards[1][1] = 0;
+                    playerTotal = 0;
+                    playerAce = 0;
+                    playerHasAce = false;
+                    total(1, true);
+                    receivedCards[0][2] = secondPlayerCard;
+                }, 500);
+                setTimeout(function () {
+                    receivedCards[1][1] = drawCard();
+                    document.getElementById("playerCard2").innerHTML = receivedCards[1][1] + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                    playerTotal = 0;
+                    playerAce = 0;
+                    playerHasAce = false;
+                    total(1, true);
+                    splitTotal = 0;
+                    splitAce = 0;
+                    splitHasAce = false;
+                    total(2, true);
+                    hitCounter = 0;
+                    document.getElementById("hitSplit").style.display = "inline";
+                    document.getElementById("standSplit").style.display = "inline";
+                }, 1000);
+            }
+        </script>
+    </head>
+    <body>
+        <span id="heading"><b>Welcome to Blackjack!</b><br>Sign up today to get $10 free.</span>
+        <p id="balance"></p>
+        <p id="betAmount"></p>
+        <p id="dealerTag"></p>
+        <span id="dealerCard1"></span>
+        <span id="dealerCard2"></span>
+        <span id="dealerCard3"></span>
+        <span id="dealerCard4"></span>
+        <span id="dealerCard5"></span>
+        <span id="dealerCard6"></span>
+        <span id="dealerCard7"></span>
+        <span id="dealerCard8"></span>
+        <span id="dealerCard9"></span>
+        <span id="dealerCard10"></span>
+        <p>
+            <span id="dealerTotalTag"></span>
+            <span id="dealerTotal"></span>
+            <span id="dealerAceTotal"></span>
+        </p>
+        <span id="dealerResult"></span>
+        <span id="dealerSplitResult"></span>
+        <p id="playerTag"></p>
+        <span id="playerCard1" ></span>
+        <span id="playerCard2" ></span>
+        <span id="playerCard3" ></span>
+        <span id="playerCard4" ></span>
+        <span id="playerCard5" ></span>
+        <span id="playerCard6" ></span>
+        <span id="playerCard7" ></span>
+        <span id="playerCard8" ></span> 
+        <span id="playerCard9" ></span> 
+        <span id="playerCard10"></span> 
+        <span id="playerCard11"></span> 
+        <p>
+            <span id="playerTotalTag"></span>
+            <span id="playerTotal"></span>
+            <span id="playerAceTotal"></span>
+        </p>
+        <p id="playerResult"></p>
+        <input type="button" id="hitSplit" onclick="hit(0)" style="display:none;" value="Hit"/>
+        <input type="button" id="standSplit" onclick="endGame(true)" style="display:none;" value="Stand"/>
+        <p id="splitTag"></p>
+        <span id="splitCard1" ></span>
+        <span id="splitCard2" ></span>
+        <span id="splitCard3" ></span>
+        <span id="splitCard4" ></span>
+        <span id="splitCard5" ></span>
+        <span id="splitCard6" ></span>
+        <span id="splitCard7" ></span>
+        <span id="splitCard8" ></span> 
+        <span id="splitCard9" ></span> 
+        <span id="splitCard10"></span> 
+        <span id="splitCard11"></span> 
+        <p>
+            <span id="splitTotalTag"></span>
+            <span id="splitTotal"></span>
+            <span id="splitAceTotal"></span>
+        </p>
+        <p id="splitResult"></p>
+        <p id="reset"></p>
+        <p></p>
+        <input type="button" onclick="login()" id="login" value="Login" />
+        <input type="button" onclick="newAccount()" id="account" value="Create an account" />
+        <input type="button" id="bet" onclick="startGame()" style="display:none;" value="Bet" />
+        <p></p>
+        <input type="button" id="hit" onclick="hit(1)" style="display:none;" value="Hit"/>
+        <input type="button" id="stand" onclick="endGame(true)" style="display:none;" value="Stand"/>
+        <input type="button" id="split" onclick="split()" style="display:none;" value="Split"/>
+        <input type="button" id="plusOne" onclick="betAmount(1)" style="display:none;" value="$1" />
+        <input type="button" id="plusTen" onclick="betAmount(10)" style="display:none;" value="$10" />
+        <input type="button" id="plusHundred" onclick="betAmount(100)" style="display:none;" value="$100" />
+        <input type="button" id="plusThousand" onclick="betAmount(1000)" style="display:none;" value="$1000" />
+        <p></p>
+        <input type="button" id="minusOne" onclick="betAmount(-1)" style="display:none;" value="-$1" />
+        <input type="button" id="minusTen" onclick="betAmount(-10)" style="display:none;" value="-$10" />
+        <input type="button" id="minusHundred" onclick="betAmount(-100)" style="display:none;" value="-$100" />
+        <input type="button" id="minusThousand" onclick="betAmount(-1000)" style="display:none;" value="-$1000" />
+        <script>
+            var usernames = ["James", "Tom", "Alex", "Samantha"]; //usernames of users
+            var passwords = [234324, "Hi234234", "e", "fefewfwef"]; //passwords of users
+            var balances = [0, -1000, 100000, 653]; //balances of users
+            var bal; //balance
+            var bet = 10; //default bet amount
+            var statementRan2; //makes sure that when the split deck ends it doesn't run the old line of code
+            var playerHasAce; //toggles on if player has an ace
+            var dealerHasAce; //toggles on if dealer has an ace
+            var splitHasAce; //toggles on if split has an ace
+            var playerSplit; //toggles on if player splits
+            var splitBust; //only true if only split deck busts in a split game
+            var playerBust; //only true if only 1st deck busts in a split game
+            var secondPlayerCard; //records the second card the player gets in original form, used when the player splits
+            var splitTotal; //split's total value to be displayed (when A is 1)
+            var splitAce; //split's total value to be displayed (when A is 1)
+            var splitFinal; //split's final score (with Ace as 11, if not busted)
+            var splitAltTotal; //toggles on when an ace exists on split
+            var timer; //used to time hitCounter
+            var gameEnded; //true when the game ends (ie when the dealer reveals its hidden card
+            var statementRan; //makes sure the statement that subtracts the hidden card in the original total only runs twice (one for the normal value, one for the ace value)
+            var hiddenDealerCard; //records the hidden dealer card at the string form
+            var dealerTotal; //dealer's total value to be displayed (when A is 1)
+            var playerTotal; //player's total value to be displayed (when A is 1)
+            var playerAce;  //player's total value to be displayed (when A is 1)
+            var playerFinal; //player's final score (with Ace as 11, if not busted)
+            var dealerAce;  //dealer's total value to be displayed (when A is 11)
+            var dealerFinal; //dealer's final score (with Ace as 11, if not busted)
+            var hitCounter; //counts how many times the hit button has been pressed
+            var dealerDrawCounter; //counts how many times the the dealer drew their cards
+            var playerAltTotal; //toggles on when an ace exists on the player's hand
+            var dealerAltTotal; //toggles on when an ace exists on the dealer's hand
+            var cards = //cards in their string form, number of times the said card has appeared
+                    [["A", 0],
+                        ["2", 0],
+                        ["3", 0],
+                        ["4", 0],
+                        ["5", 0],
+                        ["6", 0],
+                        ["7", 0],
+                        ["8", 0],
+                        ["9", 0],
+                        ["10", 0],
+                        ["J", 0],
+                        ["Q", 0],
+                        ["K", 0]
+                    ];
+            var receivedCards = [["dealerCard1", "playerCard1", "splitCard1"], //placeholder for the drawn cards
+                ["dealerCard2", "playerCard2", "splitCard2"],
+                ["dealerCard3", "playerCard3", "splitCard3"],
+                ["dealerCard4", "playerCard4", "splitCard4"],
+                ["dealerCard5", "playerCard5", "splitCard5"],
+                ["dealerCard6", "playerCard6", "splitCard6"],
+                ["dealerCard7", "playerCard7", "splitCard7"],
+                ["dealerCard8", "playerCard8", "splitCard8"],
+                ["dealerCard9", "playerCard9", "splitCard9"],
+                ["dealerCard10", "playerCard10", "splitCard10"],
+                ["dealerCard11", "playerCard11", "splitCard11"]
+            ];
+        </script>
+    </body>
+</html>
