@@ -7,6 +7,3 @@ A simple blackjack game that is playable on your web browser. User data does not
 
 ```Clock.jar``` <br>
 A simple Java program that displays your current time. Might require Java to run.
-
-```TicTac.jar``` <br>
-A 4x4 TicTacToe game made with Java. Might also require Java to run.
